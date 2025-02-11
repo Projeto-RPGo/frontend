@@ -1,10 +1,10 @@
-import LogoWithTitle from "../components/logoWithTitle";
-import InputField from "../components/inputField";
-import Button from "../components/button";
-import SignUpLink from "../components/signUpLink";
-import UserIcon from "../lib/icons/UserIcon";
-import EmailIcon from "../lib/icons/EmailIcon";
-import PasswordIcon from "../lib/icons/PasswordIcon";
+import LogoWithTitle from "../../components/logoWithTitle";
+import InputField from "../../components/inputField";
+import Button from "../../components/button";
+import SignUpLink from "../../components/signUpLink";
+import UserIcon from "../../lib/icons/UserIcon";
+import EmailIcon from "../../lib/icons/EmailIcon";
+import PasswordIcon from "../../lib/icons/PasswordIcon";
 
 export default function SignUpPage() {
   return (
