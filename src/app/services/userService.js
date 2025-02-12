@@ -1,5 +1,5 @@
 // src/services/userService.js
-import { getUsers, getUserById, createUser } from '../api/users';
+import { createUser, getUserById, getUsers } from '../api/users';
 
 export const fetchUsers = async () => {
   return await getUsers();
