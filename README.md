@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# RPGo! 🚀
 
-## Getting Started
+O RPGo! é um projeto web desenvolvido utilizando Next.js como framework frontend, proporcionando renderização eficiente no servidor (SSR) e geração de páginas estáticas (SSG). O projeto é construído com React 19, permitindo uma interface dinâmica e interativa. Para a estilização, utilizamos Tailwind CSS, um framework utilitário que facilita o design responsivo e moderno. Além disso, empregamos Axios para realizar requisições HTTP de forma simplificada e eficiente.
 
-First, run the development server:
+## ⬇️ Clonando o repositório
+Você pode baixar ou clonar o projeto de duas formas:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Usando Git**
+  ```sh
+  git clone git@github.com:Projeto-RPGo/frontend.git
+  ```
+
+- **Usando GitHub CLI**
+  ```sh
+  gh repo clone Projeto-RPGo/frontend
+  ```
+
+> *Ou baixe o arquivo ZIP diretamente pelo GitHub e extraia no seu computador.*
+
+## ⚙️ Baixando Requisitos
+
+Antes de começar, certifique-se de que você tem as seguintes ferramentas instaladas:
+
+Instalando Nodejs e npm
+```sh
+sudo apt update
+sudo apt install npm
+sudo npm install -g n
+sudo n latest # baixando versão mais atual do nodesj
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+instalando dependencias
+```sh
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🌱 Executando Aplicação
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Execute o comando para iniciar o servidor:
+```sh
+npm run dev
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> *Por padrão, o Next.js rodará o servidor localmente em http://localhost:3000/*
