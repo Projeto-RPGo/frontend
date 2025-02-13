@@ -1,10 +1,10 @@
-import LogoWithTitle from "../../components/logoWithTitle";
-import InputField from "../../components/inputField";
-import Button from "../../components/button";
-import SignUpLink from "../../components/signUpLink";
-import UserIcon from "../../lib/icons/UserIcon";
-import EmailIcon from "../../lib/icons/EmailIcon";
-import PasswordIcon from "../../lib/icons/PasswordIcon";
+import Button from "../components/button";
+import InputField from "../components/inputField";
+import LogoWithTitle from "../components/logoWithTitle";
+import SignUpLink from "../components/signUpLink";
+import EmailIcon from "../lib/icons/EmailIcon";
+import PasswordIcon from "../lib/icons/PasswordIcon";
+import UserIcon from "../lib/icons/UserIcon";
 
 export default function SignUpPage() {
   return (
@@ -16,10 +16,10 @@ export default function SignUpPage() {
         {/* Formulário de cadastro */}
         <form className="space-y-6">
           {/* Campos do formulário */}
-            <InputField type="text" placeholder="USERNAME" icon={<UserIcon />} />
-            <InputField type="email" placeholder="EMAIL" icon={<EmailIcon />} />
-            <InputField type="password" placeholder="PASSWORD" icon={<PasswordIcon />} />
-            <InputField type="confirmPassword" placeholder="CONFIRM PASSWORD" icon={<PasswordIcon />} />
+          <InputField type="text" placeholder="USERNAME" icon={<UserIcon />} />
+          <InputField type="email" placeholder="EMAIL" icon={<EmailIcon />} />
+          <InputField type="password" placeholder="PASSWORD" icon={<PasswordIcon />} />
+          <InputField type="confirmPassword" placeholder="CONFIRM PASSWORD" icon={<PasswordIcon />} />
           {/* Botão Criar Conta */}
           <Button label="CRIAR CONTA" variant="primary" />
         </form>
