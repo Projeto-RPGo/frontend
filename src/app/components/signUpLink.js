@@ -1,10 +1,12 @@
+import Link from "next/link";
+
 function SignUpLink() {
     return (
       <p className="text-center text-white mt-4 text-sm">
         Já tem conta?{" "}
-        <a href="/login" className="underline hover:text-gray-300">
+        <Link href="/" className="underline hover:text-gray-300">
           Login
-        </a>
+        </Link>
       </p>
     );
   }
