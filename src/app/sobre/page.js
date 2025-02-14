@@ -1,6 +1,6 @@
 
-import HeaderMenu from "@/app/components/hearderMenu";
-import LogoWithTitle from "@/app/components/logoWithTitle";
+import HeaderMenu from "@/components/hearderMenu";
+import LogoWithTitle from "@/components/logoWithTitle";
 
 export default function SobrePage() {
     return (

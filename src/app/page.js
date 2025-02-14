@@ -1,13 +1,13 @@
 "use client";  // Necessário para usar useRouter em componentes Client
 
 import { useRouter } from "next/navigation";
-import LogoWithTitle from "./components/logoWithTitle";
-import InputField from "./components/inputField";
-import Button from "./components/button";
-import ForgotPassword from "./components/forgotPassword";
-import HeaderMenu from "./components/hearderMenu";
-import UserIcon from "./lib/icons/UserIcon";
-import PasswordIcon from "./lib/icons/PasswordIcon";
+import LogoWithTitle from "../components/logoWithTitle";
+import InputField from "../components/inputField";
+import Button from "../components/button";
+import ForgotPassword from "../components/forgotPassword";
+import HeaderMenu from "../components/hearderMenu";
+import UserIcon from "../lib/icons/UserIcon";
+import PasswordIcon from "../lib/icons/PasswordIcon";
 
 export default function LoginPage() {
   const router = useRouter();
