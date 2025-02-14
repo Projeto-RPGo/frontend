@@ -1,3 +1,6 @@
+"use client";  // Necessário para usar useRouter em componentes Client
+
+import { useRouter } from "next/navigation";
 import LogoWithTitle from "./components/logoWithTitle";
 import InputField from "./components/inputField";
 import Button from "./components/button";
@@ -7,6 +10,8 @@ import UserIcon from "./lib/icons/UserIcon";
 import PasswordIcon from "./lib/icons/PasswordIcon";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   return (
     <div className="bg-[#D4A59A] pt-5">
       <HeaderMenu />
@@ -21,7 +26,9 @@ export default function LoginPage() {
             <InputField type="text" placeholder="USERNAME" icon={<UserIcon />} />
             <InputField type="password" placeholder="PASSWORD" icon={<PasswordIcon />} />
             <Button label="LOGIN" variant="primary" />
-            <Button label="CRIAR CONTA" variant="secondary" />
+
+            {/*Botão Criar Conta com Redirecionamento */}
+            <Button label="CRIAR CONTA" variant="secondary" onClick={() => router.push("/signUp")}/>
 
             {/* Link para "Forgot Password" */}
             <ForgotPassword />
