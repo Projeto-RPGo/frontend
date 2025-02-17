@@ -1,4 +1,4 @@
-function LogoWithTitle() {
+export default function LogoWithTitle() {
     return (
       <div className="flex items-center justify-center mb-8">
         <img
@@ -9,7 +9,4 @@ function LogoWithTitle() {
         <h1 className="text-4xl font-bold text-white mr-40">RPGo!</h1>
       </div>
     );
-  }
-  
-  export default LogoWithTitle;
-  
+  }  
