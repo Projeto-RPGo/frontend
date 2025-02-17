@@ -4,33 +4,30 @@ import { useState } from "react";
 import FormButton from "../Forms/formButton";
 import InputField from "../Forms/inputField";
 import { Icon } from "../Icon/icon";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
+  const router = useRouter();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState({ value: "", show: false });
 
   const [errors, setErrors] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
   const isValid =
     Object.values(errors).every((error) => error === "") &&
-    email.trim() !== "" &&
+    username.trim() !== "" &&
     password.value.trim() !== "";
 
   const validateField = (fieldName, value) => {
     const newErrors = { ...errors };
 
-    if (fieldName === "email") {
-      if (!value.trim()) {
-        newErrors.email = "O campo Email é obrigatório.";
-      } else {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        newErrors.email = !emailRegex.test(value)
-          ? "O campo Email não é válido."
-          : "";
-      }
+    if (fieldName === "username") {
+      newErrors.username = !value.trim()
+        ? "O campo Username é obrigatório."
+        : "";
     }
 
     if (fieldName === "password") {
@@ -44,7 +41,7 @@ export default function LoginForm() {
   };
 
   const handleChange = (fieldName, value) => {
-    if (fieldName === "email") setEmail(value);
+    if (fieldName === "username") setUsername(value);
     if (fieldName === "password") setPassword({ ...password, value });
 
     validateField(fieldName, value);
@@ -57,10 +54,10 @@ export default function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setEmail("");
+    setUsername("");
     setPassword({ value: "", show: false });
     setErrors({
-      email: "",
+      username: "",
       password: "",
     });
   };
@@ -69,15 +66,15 @@ export default function LoginForm() {
     <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <InputField
-          type="email"
-          name="email"
-          id="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => handleChange("email", e.target.value)}
+          type="text"
+          name="username"
+          id="username"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => handleChange("username", e.target.value)}
         />
-        {errors.email && (
-          <p className="text-white text-sm text-left ml-1">{errors.email}</p>
+        {errors.username && (
+          <p className="text-white text-sm text-left ml-1">{errors.username}</p>
         )}
       </div>
       <div className="flex flex-col gap-2 relative">
@@ -104,7 +101,9 @@ export default function LoginForm() {
           <p className="text-white text-sm text-left ml-1">{errors.password}</p>
         )}
       </div>
-      <FormButton isValid={isValid}>LOGIN</FormButton>
+      <FormButton isValid={isValid} onClick={() => router.push("/")}>
+        LOGIN
+      </FormButton>
     </form>
   );
 }

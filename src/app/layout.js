@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen bg-[#D4A59A] justify-center items-center flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen bg-gray-800 justify-center items-center flex flex-col`}
       >
         <HeaderMenu />
         {children}
