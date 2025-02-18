@@ -1,5 +1,6 @@
 
 import LogoWithTitle from "@/components/Images/logoWithTitle";
+import Footer from "@/components/Footer/footer";
 
 export default function SobrePage() {
     return (
@@ -10,6 +11,7 @@ export default function SobrePage() {
               <LogoWithTitle />
             </div>
           </div>
+          
         </div>
     );
 }
