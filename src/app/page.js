@@ -13,7 +13,7 @@ export default function HomePage() {
           <LogoWithTitle />
           <FormButton
             className="w-full py-3 rounded-full transition text-[#A63F3F] bg-white hover:bg-gray-100 shadow-black shadow-sm"
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/profile")}
             isValid={true}
           >
             ACESSAR MUNDO
