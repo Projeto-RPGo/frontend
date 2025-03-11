@@ -40,12 +40,14 @@ export default function LoginForm() {
   };
 
   const handleChange = (fieldName, value) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [fieldName]: "",
+      apiError: "",
+    }));
+
     if (fieldName === "username") setUsername(value);
     if (fieldName === "password") setPassword({ ...password, value });
-
-    setErrors((prevErrors) => ({ ...prevErrors, apiError: "" }));
-
-    validateField(fieldName, value);
   };
 
   const handleToggleShowPassword = () => {
@@ -54,14 +56,18 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({ ...errors, apiError: "" });
+
+    validateField("username", username);
+    validateField("password", password.value);
+
+    if (!isValid) return;
+
+    setErrors((prevErrors) => ({ ...prevErrors, apiError: "" }));
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ username, password: password.value }),
       });
@@ -75,7 +81,10 @@ export default function LoginForm() {
 
       router.push("/");
     } catch (error) {
-      setErrors({ ...errors, apiError: error.message });
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        apiError: error.message,
+      }));
     }
   };
 
