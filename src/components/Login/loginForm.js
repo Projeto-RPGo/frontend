@@ -30,12 +30,6 @@ export default function LoginForm() {
         : "";
     }
 
-    if (fieldName === "password") {
-      newErrors.password = !value.trim()
-        ? "O campo Senha é obrigatório."
-        : "";
-    }
-
     setErrors(newErrors);
   };
 
