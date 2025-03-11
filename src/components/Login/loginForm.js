@@ -30,13 +30,6 @@ export default function LoginForm() {
         : "";
     }
 
-    if (fieldName === "password") {
-      const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
-      newErrors.password = !passwordRegex.test(value)
-        ? "A senha deve ter pelo menos 8 caracteres, incluindo letras e números."
-        : "";
-    }
-
     setErrors(newErrors);
   };
 
