@@ -82,7 +82,6 @@ export default function RegisterForm() {
       }
 
       const data = await response.json();
-      console.log("Cadastro bem-sucedido:", data);
       router.push("/");
     } catch (error) {
       setErrors({ ...errors, apiError: error.message });
