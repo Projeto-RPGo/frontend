@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import CardPersonagem from "@/components/Profile/cardPersonagem";
 import CreatePersonagem from "@/components/Profile/createPersonagem";
-import { userAgent } from "next/server";
 
-export default function ProfilePage() {
+export default function AdmPage() {
   const { usuario } = useAuth();
   const [personagens, setPersonagens] = useState([]);
 
@@ -13,7 +12,7 @@ export default function ProfilePage() {
     if (!usuario) return;
 
     async function fetchPersonagens() {
-      const response = await fetch(`/api/personagens?userId=${usuario.id}`);
+      const response = await fetch(`/api/adm/personagens`);
       const data = await response.json();
       setPersonagens(data);
     }
@@ -69,7 +68,7 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-white mb-6">Perfil</h1>
+      <h1 className="text-3xl font-bold text-white mb-6">Administrador</h1>
 
       <div className="bg-gray-800 p-4 rounded-lg shadow-md mb-6">
         <h3 className="text-white">

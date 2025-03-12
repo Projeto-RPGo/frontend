@@ -12,7 +12,7 @@ function AuthInitializer() {
       nome: "Usuário de Teste",
       email: "teste@teste.teste",
       username: "tester",
-      adm: false,
+      adm: true
     });
   }, [setUsuario]);
 

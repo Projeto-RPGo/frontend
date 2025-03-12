@@ -1,8 +1,13 @@
 import Link from 'next/link'; // Importa o Link do Next.js
 
-export default function CardPersonagem({ personagem }) {
+export default function CardPersonagem({ personagem , adm}) {
+  const isAdm = adm; // Verifica se o usuário é administrador
+
   return (
-    <Link href={`/profile/personagem?id=${personagem.id}`} passHref>
+    <Link
+      href={isAdm ? `/adm/personagem?id=${personagem.id}` : `/profile/personagem?id=${personagem.id}`}
+      passHref
+    >
       <div className="bg-gray-800 p-4 rounded-lg shadow-md text-white border border-gray-700 transition duration-300 ease-in-out hover:bg-gray-700 active:bg-gray-600">
         <img
           src={personagem.imagem}
