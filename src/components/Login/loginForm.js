@@ -71,7 +71,6 @@ export default function LoginForm() {
       }
 
       const data = await response.json();
-      console.log("Login bem-sucedido:", data);
 
       router.push("/");
     } catch (error) {

@@ -54,7 +54,6 @@ export default function CriarPersonagemPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Personagem criado:", personagem);
       cleanForm();
     }
   };
@@ -75,7 +74,7 @@ export default function CriarPersonagemPage() {
   };
 
   return (
-    <div className="bg-gray-900 text-white p-8 w-full min-h-screen flex items-center justify-center mt-[43rem]">
+    <div className="bg-gray-900 text-white p-8 w-full min-h-screen flex items-center justify-center">
       <div className="w-full max-w-4xl">
         <h1 className="text-3xl font-bold mb-8 text-center">
           Criar Personagem

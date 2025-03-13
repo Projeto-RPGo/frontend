@@ -23,7 +23,7 @@ export default function Layout({ children }) {
     <AuthProvider>
       <AuthInitializer />
       <HeaderProfile />
-      <main>{children}</main>
+      <main className="flex-1 w-full overflow-auto pt-[100px]">{children}</main>
     </AuthProvider>
   );
 }
