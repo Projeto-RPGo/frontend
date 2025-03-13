@@ -5,7 +5,7 @@ export default function CreatePersonagem() {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push("/profile/personagem/create");
+    router.push("/profile/character/create");
   };
 
   return (

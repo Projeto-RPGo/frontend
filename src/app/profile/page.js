@@ -1,68 +1,37 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/context/authContext";
-import CardPersonagem from "@/components/Profile/cardPersonagem";
+import CharacterCard from "@/components/Profile/characterCard";
 import CreatePersonagem from "@/components/Profile/createPersonagem";
+import { useAuth } from "@/context/authContext";
+import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
-  const { usuario } = useAuth();
-  const [personagens, setPersonagens] = useState([]);
+  const { user } = useAuth();
+  const [characters, setCharacters] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!usuario) return;
+    if (!user?.id) return;
 
-    async function fetchPersonagens() {
-      const response = await fetch(`/api/personagens?userId=${usuario.id}`);
-      const data = await response.json();
-      setPersonagens(data);
+    async function fetchCharacters() {
+      setLoading(true);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters`);
+        if (!response.ok) {
+          throw new Error("Erro ao buscar personagens");
+        }
+        const data = await response.json();
+        setCharacters(data);
+      } catch (error) {
+        console.error("Erro ao buscar personagens:", error);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    const perso1 = {
-      id: 1,
-      nome: "Personagem de Teste",
-      afiliacao: "Guarda Real",
-      nivel: 100,
-      imagem:
-        "https://images.pexels.com/photos/102127/pexels-photo-102127.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    };
-    const perso2 = {
-      id: 2,
-      nome: "Personagem de Teste 2",
-      afiliacao: "Clero",
-      nivel: 250,
-      imagem:
-        "https://images.pexels.com/photos/102127/pexels-photo-102127.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    };
+    fetchCharacters();
+  }, [user]);
 
-    const perso3 = {
-      id: 3,
-      nome: "Personagem de Teste 3",
-      afiliacao: "Guarda Real",
-      nivel: 300,
-      imagem:
-        "https://images.pexels.com/photos/102127/pexels-photo-102127.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    };
-    const perso4 = {
-      id: 4,
-      nome: "Personagem de Teste 4",
-      afiliacao: "Clero",
-      nivel: 350,
-      imagem:
-        "https://images.pexels.com/photos/102127/pexels-photo-102127.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    };
-    const perso5 = {
-      id: 5,
-      nome: "Personagem de Teste 5",
-      afiliacao: "Guarda Real",
-      nivel: 430,
-      imagem:
-        "https://images.pexels.com/photos/102127/pexels-photo-102127.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    };
-
-    setPersonagens([perso1, perso2]);
-  }, [usuario]);
-
-  if (!usuario) {
+  if (!user) {
     return <p className="text-white">Carregando perfil...</p>;
   }
 
@@ -72,25 +41,29 @@ export default function ProfilePage() {
 
       <div className="bg-gray-800 p-4 rounded-lg shadow-md mb-6">
         <h3 className="text-white">
-          <strong>Nome:</strong> {usuario.nome}
+          <strong>Nome:</strong> {user.name}
         </h3>
         <h3 className="text-white">
-          <strong>Username:</strong> {usuario.username}
+          <strong>Username:</strong> {user.username}
         </h3>
         <h3 className="text-white">
-          <strong>Email:</strong> {usuario.email}
+          <strong>Email:</strong> {user.email}
         </h3>
       </div>
 
       <h2 className="text-2xl font-bold text-white mb-4">Personagens</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {personagens.length > 0 &&
-          personagens.map((personagem) => (
-            <CardPersonagem key={personagem.id} personagem={personagem} />
-          ))}
-        <CreatePersonagem />
-      </div>
+      {loading ? (
+        <p className="text-white">Carregando personagens...</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {characters.length > 0 &&
+            characters.map((character) => (
+              <CharacterCard key={character.character_id} character={character} />
+            ))}
+          <CreatePersonagem />
+        </div>
+      )}
     </div>
   );
 }
