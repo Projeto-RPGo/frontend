@@ -69,8 +69,6 @@ export async function GET(request) {
   const domId = searchParams.get("domId");
   const userId = searchParams.get("userId");
 
-  console.log("domId:", domId, "userId:", userId);
-
   try {
     if (!domId) {
       return NextResponse.json(

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Icon } from "../Icon/icon";
 
 export default function DomSkill({ dom, userId }) {
   const [habs, setHabs] = useState([]);
@@ -88,9 +89,17 @@ export default function DomSkill({ dom, userId }) {
       {/* Título do Domínio */}
       <div
         onClick={toggleDom}
-        className="cursor-pointer font-bold text-lg text-red-500 hover:text-red-600 transition-colors"
+        className="cursor-pointer font-bold text-lg text-red-500 hover:text-red-600 transition-colors flex items-center"
       >
         {dom ? dom.nome : "Carregando..."}
+        <Icon
+          id={"expand"}
+          height={15}
+          width={8}
+          className={`ml-2 transition-transform duration-300 ${
+            expandedDom ? "rotate-90" : "rotate-0"
+          }`}
+        />
       </div>
 
       {/* Lista de Habilidades */}
@@ -101,9 +110,17 @@ export default function DomSkill({ dom, userId }) {
               {/* Nome da Habilidade */}
               <div
                 onClick={() => toggleHab(hab.id)}
-                className="cursor-pointer font-semibold text-gray-200 hover:text-gray-300 transition-colors"
+                className="cursor-pointer font-semibold text-gray-200 hover:text-gray-300 transition-colors flex items-center"
               >
                 {hab.nome}
+                <Icon
+                  id={"expand"}
+                  height={15}
+                  width={8}
+                  className={`ml-2 transition-transform duration-300 ${
+                    expandedHabs[hab.id] ? "rotate-90" : "rotate-0"
+                  }`}
+                />
               </div>
 
               {/* Detalhes da Habilidade */}
@@ -135,9 +152,17 @@ export default function DomSkill({ dom, userId }) {
                       >
                         <div
                           onClick={() => toggleMcf(mcf.id)}
-                          className="cursor-pointer font-semibold text-red-500 hover:text-red-600 transition-colors"
+                          className="cursor-pointer font-semibold text-red-500 hover:text-red-600 transition-colors flex items-center"
                         >
-                          {mcf.nome}:
+                          {mcf.nome}
+                          <Icon
+                            id={"expand"}
+                            height={15}
+                            width={8}
+                            className={`ml-2 transition-transform duration-300 ${
+                              expandedMcfs[mcf.id] ? "rotate-90" : "rotate-0"
+                            }`}
+                          />
                         </div>
                         {expandedMcfs[mcf.id] && (
                           <ul className="list-disc list-inside ml-4">
@@ -157,9 +182,17 @@ export default function DomSkill({ dom, userId }) {
                     <div className="border border-gray-700 rounded-lg p-3 mb-2">
                       <div
                         onClick={() => toggleEspec(hab.id)}
-                        className="cursor-pointer font-semibold text-red-500 hover:text-red-600 transition-colors"
+                        className="cursor-pointer font-semibold text-red-500 hover:text-red-600 transition-colors flex items-center"
                       >
-                        Especializações:
+                        Especializações
+                        <Icon
+                          id={"expand"}
+                          height={15}
+                          width={8}
+                          className={`ml-2 transition-transform duration-300 ${
+                            expandedEspec[hab.id] ? "rotate-90" : "rotate-0"
+                          }`}
+                        />
                       </div>
                       {expandedEspec[hab.id] && (
                         <ul className="list-disc list-inside">
@@ -188,9 +221,17 @@ export default function DomSkill({ dom, userId }) {
                     <div className="border border-gray-700 rounded-lg p-3 mb-2">
                       <div
                         onClick={() => toggleDomMax(hab.id)}
-                        className="cursor-pointer font-semibold text-red-500 hover:text-red-600 transition-colors"
+                        className="cursor-pointer font-semibold text-red-500 hover:text-red-600 transition-colors flex items-center"
                       >
-                        Domínio Máximo:
+                        Domínio Máximo
+                        <Icon
+                          id={"expand"}
+                          height={15}
+                          width={8}
+                          className={`ml-2 transition-transform duration-300 ${
+                            expandedDomMax[hab.id] ? "rotate-90" : "rotate-0"
+                          }`}
+                        />
                       </div>
                       {expandedDomMax[hab.id] && (
                         <div>
