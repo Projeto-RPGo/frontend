@@ -1,6 +1,6 @@
 "use client";
 import CharacterCard from "@/components/Profile/characterCard";
-import CreatePersonagem from "@/components/Profile/createPersonagem";
+import CreateCharacter from "@/components/Profile/createCharacter";
 import { useAuth } from "@/context/authContext";
 import { useEffect, useState } from "react";
 
@@ -15,7 +15,13 @@ export default function ProfilePage() {
     async function fetchCharacters() {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
         if (!response.ok) {
           throw new Error("Erro ao buscar personagens");
         }
@@ -61,7 +67,7 @@ export default function ProfilePage() {
             characters.map((character) => (
               <CharacterCard key={character.character_id} character={character} />
             ))}
-          <CreatePersonagem />
+          <CreateCharacter />
         </div>
       )}
     </div>

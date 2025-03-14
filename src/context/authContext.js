@@ -10,15 +10,20 @@ export function AuthProvider({ children }) {
     async function fetchUser() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
           credentials: "include",
         });
-
+  
         if (response.ok) {
           const data = await response.json();
           setUser(data);
           console.log("Usuário logado:", data);
         } else {
           setUser(null);
+          console.warn("Usuário não autenticado");
         }
       } catch (error) {
         console.error("Erro ao buscar usuário:", error);

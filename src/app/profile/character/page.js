@@ -21,13 +21,20 @@ export default function CharacterPage() {
       if (!id) return;
 
       try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters/${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setCharacter(data);
-      } else {
-        console.error("Erro ao buscar personagem:", response.statusText);
-      }}
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters/${id}/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setCharacter(data);
+        } else {
+          console.error("Erro ao buscar personagem:", response.statusText);
+        }
+      }
       catch {
         console.error("Erro na requisição:", error);
       }

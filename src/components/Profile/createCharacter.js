@@ -1,7 +1,7 @@
 import { Icon } from "@/components/Icon/icon";
 import { useRouter } from "next/navigation";
 
-export default function CreatePersonagem() {
+export default function CreateCharacter() {
   const router = useRouter();
 
   const handleClick = () => {

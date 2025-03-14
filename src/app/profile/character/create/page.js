@@ -1,25 +1,73 @@
 "use client";
-import { useState } from "react";
+import { useAuth } from "@/context/authContext";
+import { useEffect, useState } from "react";
 
-export default function CriarPersonagemPage() {
-  const [personagem, setPersonagem] = useState({
-    nome: "",
-    idade: "",
-    raca: "",
-    afiliacao: "",
-    dominio1: "",
-    dominio2: "",
-    personalidade: "",
-    backgroundHistory: "",
-    aparencia: "",
+export default function CreateCharacterPage() {
+  const { user } = useAuth();
+  const [character, setCharacter] = useState({
+    name: "",
+    age: "",
+    race: "",
+    status: "",
+    rank: "0",
+    affiliation: "",
+    domain1_id: "",
+    domain2_id: "",
+    personality: "",
+    background: "",
+    appearance: "",
     avatar: null,
+    user_id: user ? user.id : null,
   });
 
+  const [races, setRaces] = useState([]);
+  const [affiliations, setAffiliations] = useState([]);
+  const [domains, setDomains] = useState([]);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (user) {
+      setCharacter((prev) => ({
+        ...prev,
+        user_id: user.id,
+      }));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [raceRes, affiliationRes, domainRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/race/`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/affiliation/`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/domain/`),
+        ]);
+
+        if (raceRes.ok) {
+          const raceData = await raceRes.json();
+          setRaces(raceData);
+        }
+
+        if (affiliationRes.ok) {
+          const affiliationData = await affiliationRes.json();
+          setAffiliations(affiliationData);
+        }
+
+        if (domainRes.ok) {
+          const domainData = await domainRes.json();
+          setDomains(domainData);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPersonagem((prev) => ({
+    setCharacter((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -28,15 +76,21 @@ export default function CriarPersonagemPage() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setPersonagem((prev) => ({
-        ...prev,
-        avatar: URL.createObjectURL(file),
-      }));
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setCharacter((prev) => ({
+          ...prev,
+          avatar: reader.result,
+        }));
+      };
+
+      reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveAvatar = () => {
-    setPersonagem((prev) => ({
+    setCharacter((prev) => ({
       ...prev,
       avatar: null,
     }));
@@ -44,32 +98,55 @@ export default function CriarPersonagemPage() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!personagem.nome) newErrors.nome = "Nome é obrigatório";
-    if (!personagem.idade || personagem.idade < 1 || personagem.idade > 120)
-      newErrors.idade = "Idade deve ser entre 1 e 120";
+    if (!character.name) newErrors.name = "Nome é obrigatório";
+    if (!character.age || character.age < 1 || character.age > 120)
+      newErrors.age = "Idade deve ser entre 1 e 120";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (validateForm()) {
-      cleanForm();
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(character),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Personagem criado com sucesso:", data);
+          cleanForm();
+        } else {
+          const errorData = await response.json();
+          console.error("Erro ao criar personagem:", errorData);
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
     }
   };
 
   const cleanForm = () => {
-    setPersonagem({
-      nome: "",
-      idade: "",
-      raca: "",
-      afiliacao: "",
-      dominio1: "",
-      dominio2: "",
-      personalidade: "",
-      backgroundHistory: "",
-      aparencia: "",
+    setCharacter({
+      name: "",
+      age: "",
+      race: "",
+      status: "",
+      rank: "0",
+      affiliation: "",
+      domain1_id: "",
+      domain2_id: "",
+      personality: "",
+      background: "",
+      appearance: "",
       avatar: null,
+      user_id: user ? user.id : null,
     });
   };
 
@@ -98,10 +175,10 @@ export default function CriarPersonagemPage() {
               htmlFor="avatar-input"
               className="cursor-pointer w-60 h-60 bg-gray-700 border-2 border-gray-600 rounded-md flex items-center justify-center hover:bg-gray-600 transition-colors"
             >
-              {personagem.avatar ? (
+              {character.avatar ? (
                 <div className="relative w-full h-full">
                   <img
-                    src={personagem.avatar}
+                    src={character.avatar}
                     alt="Avatar"
                     className="w-full h-full object-cover rounded-md"
                   />
@@ -123,8 +200,8 @@ export default function CriarPersonagemPage() {
             </label>
             <input
               type="text"
-              name="aparencia"
-              value={personagem.aparencia}
+              name="appearance"
+              value={character.appearance}
               onChange={handleChange}
               className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               placeholder="Ex: Goku - Dragon Ball Z"
@@ -138,33 +215,49 @@ export default function CriarPersonagemPage() {
             <h2 className="text-xl font-semibold mb-4 text-red-500">
               Informações Básicas
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid">
               <div>
                 <label className="block text-sm font-medium mb-1">Nome</label>
                 <input
                   type="text"
-                  name="nome"
-                  value={personagem.nome}
+                  name="name"
+                  value={character.name}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   required
                 />
-                {errors.nome && (
-                  <p className="text-red-500 text-sm mt-1">{errors.nome}</p>
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
                 )}
               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Idade</label>
                 <input
                   type="number"
-                  name="idade"
-                  value={personagem.idade}
+                  name="age"
+                  value={character.age}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   required
                 />
-                {errors.idade && (
-                  <p className="text-red-500 text-sm mt-1">{errors.idade}</p>
+                {errors.age && (
+                  <p className="text-red-500 text-sm mt-1">{errors.age}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Status</label>
+                <input
+                  type="text"
+                  name="status"
+                  value={character.status}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  required
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
                 )}
               </div>
             </div>
@@ -178,52 +271,77 @@ export default function CriarPersonagemPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Raça</label>
-                <input
-                  type="text"
-                  name="raca"
-                  value={personagem.raca}
+                <select
+                  name="race"
+                  value={character.race}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   required
-                />
+                >
+                  <option value="">Selecione uma raça</option>
+                  {races.map((race) => (
+                    <option key={race.race_id} value={race.race_id}>
+                      {race.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Afiliação
                 </label>
-                <input
-                  type="text"
-                  name="afiliacao"
-                  value={personagem.afiliacao}
+                <select
+                  name="affiliation"
+                  value={character.affiliation}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   required
-                />
+                >
+                  <option value="">Selecione uma afiliação</option>
+                  {affiliations.map((affiliation) => (
+                    <option key={affiliation.affiliation_id} value={affiliation.affiliation_id}>
+                      {affiliation.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Domínio 1
                 </label>
-                <input
-                  type="text"
-                  name="dominio1"
-                  value={personagem.dominio1}
+                <select
+                  name="domain1_id"
+                  value={character.domain1_id}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   required
-                />
+                >
+                  <option value="">Selecione um domínio</option>
+                  {domains.map((domain) => (
+                    <option key={domain.domain_id} value={domain.domain_id}>
+                      {domain.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Domínio 2
                 </label>
-                <input
-                  type="text"
-                  name="dominio2"
-                  value={personagem.dominio2}
+                <select
+                  name="domain2_id"
+                  value={character.domain2_id}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
+                  required
+                >
+                  <option value="">Selecione um domínio</option>
+                  {domains.map((domain) => (
+                    <option key={domain.domain_id} value={domain.domain_id}>
+                      {domain.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
@@ -239,8 +357,8 @@ export default function CriarPersonagemPage() {
                   Personalidade
                 </label>
                 <textarea
-                  name="personalidade"
-                  value={personagem.personalidade}
+                  name="personality"
+                  value={character.personality}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   rows="3"
@@ -251,8 +369,8 @@ export default function CriarPersonagemPage() {
                   História de Fundo
                 </label>
                 <textarea
-                  name="backgroundHistory"
-                  value={personagem.backgroundHistory}
+                  name="background"
+                  value={character.background}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   rows="5"
