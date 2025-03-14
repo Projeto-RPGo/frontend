@@ -3,6 +3,7 @@ import CharacterCard from "@/components/Profile/characterCard";
 import CreateCharacter from "@/components/Profile/createCharacter";
 import { useAuth } from "@/context/authContext";
 import { useEffect, useState } from "react";
+import LogoutButton from "@/components/Logout/logoutButton";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -12,7 +13,8 @@ export default function ProfilePage() {
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    if (parts.length === 2)
+      return decodeURIComponent(parts.pop().split(";").shift());
     return null;
   }
 
@@ -22,14 +24,17 @@ export default function ProfilePage() {
     async function fetchCharacters() {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters/user/${user.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken"),
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/characters/user/${user.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            credentials: "include",
+          }
+        );
         if (!response.ok) {
           throw new Error("Erro ao buscar personagens");
         }
@@ -51,7 +56,10 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-white mb-6">Perfil</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-white">Perfil</h1>
+        <LogoutButton />
+      </div>
 
       <div className="bg-gray-800 p-4 rounded-lg shadow-md mb-6">
         <h3 className="text-white">
@@ -73,7 +81,10 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {characters.length > 0 &&
             characters.map((character) => (
-              <CharacterCard key={character.character_id} character={character} />
+              <CharacterCard
+                key={character.character_id}
+                character={character}
+              />
             ))}
           <CreateCharacter />
         </div>

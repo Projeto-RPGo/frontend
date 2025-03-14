@@ -1,7 +1,12 @@
+import LogoutButton from "@/components/Logout/logoutButton";
+
 export default function AdminPage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-white mb-3">O Mundo</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-white mb-3">O Mundo</h1>
+        <LogoutButton />
+      </div>
       <h2 className="text-lg text-gray-400 mb-6">
         Administre o seu mundo da melhor forma! O céu é o limite!
       </h2>
