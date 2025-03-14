@@ -6,7 +6,7 @@ export default function Layout({ children }) {
   return (
     <AuthProvider>
       <HeaderProfile />
-      <main>{children}</main>
+      <main className="pt-[100px]">{children}</main>
     </AuthProvider>
   );
 }
