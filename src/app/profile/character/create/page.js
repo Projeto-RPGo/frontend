@@ -11,8 +11,8 @@ export default function CreateCharacterPage() {
     status: "",
     rank: "0",
     affiliation: "",
-    domain1_id: "",
-    domain2_id: "",
+    domain1: "",
+    domain2: "",
     personality: "",
     background: "",
     appearance: "",
@@ -140,8 +140,8 @@ export default function CreateCharacterPage() {
       status: "",
       rank: "0",
       affiliation: "",
-      domain1_id: "",
-      domain2_id: "",
+      domain1: "",
+      domain2: "",
       personality: "",
       background: "",
       appearance: "",
@@ -310,8 +310,8 @@ export default function CreateCharacterPage() {
                   Domínio 1
                 </label>
                 <select
-                  name="domain1_id"
-                  value={character.domain1_id}
+                  name="domain1"
+                  value={character.domain1}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   required
@@ -329,8 +329,8 @@ export default function CreateCharacterPage() {
                   Domínio 2
                 </label>
                 <select
-                  name="domain2_id"
-                  value={character.domain2_id}
+                  name="domain2"
+                  value={character.domain2}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   required
