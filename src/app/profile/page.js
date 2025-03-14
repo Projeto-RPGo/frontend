@@ -9,16 +9,24 @@ export default function ProfilePage() {
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+  }
+
   useEffect(() => {
     if (!user?.id) return;
 
     async function fetchCharacters() {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters/`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters/user/${user.id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
           },
           credentials: "include",
         });

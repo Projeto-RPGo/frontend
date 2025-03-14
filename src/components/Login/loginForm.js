@@ -16,6 +16,13 @@ export default function LoginForm() {
     apiError: "",
   });
 
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+  }
+
   const isValid =
     Object.values(errors).every((error) => error === "") &&
     username.trim() !== "" &&
@@ -59,9 +66,13 @@ export default function LoginForm() {
     setErrors((prevErrors) => ({ ...prevErrors, apiError: "" }));
 
     try {
+      const csrftoken = getCookie("csrftoken");
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken
+        },
         credentials: "include",
         body: JSON.stringify({ username, password: password.value }),
       });
