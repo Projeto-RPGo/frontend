@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 import { Icon } from "../Icon/icon";
 
 export default function EditableCharacterCard({ character }) {
@@ -9,14 +9,24 @@ export default function EditableCharacterCard({ character }) {
   const [isEditingXp, setIsEditingXp] = useState(false);
   const [isEditingEuros, setIsEditingEuros] = useState(false);
 
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+  }
+
+
   const handleSaveXp = async () => {
     try {
+      const csrftoken = getCookie("csrftoken");
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/characters/${character.character_id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/characters/${character.character_id}/`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken,
           },
           credentials: "include",
           body: JSON.stringify({ xp }),
@@ -35,17 +45,19 @@ export default function EditableCharacterCard({ character }) {
 
   const handleCancelXp = () => {
     setXp(character.xp);
-    setIsEditingXp(false); 
+    setIsEditingXp(false);
   };
 
   const handleSaveEuros = async () => {
     try {
+      const csrftoken = getCookie("csrftoken");
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/characters/${character.character_id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/characters/${character.character_id}/`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken,
           },
           credentials: "include",
           body: JSON.stringify({ euros }),
@@ -63,8 +75,8 @@ export default function EditableCharacterCard({ character }) {
   };
 
   const handleCancelEuros = () => {
-    setEuros(character.euros); 
-    setIsEditingEuros(false); 
+    setEuros(character.euros);
+    setIsEditingEuros(false);
   };
 
   return (
