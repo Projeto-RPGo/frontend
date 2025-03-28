@@ -1,21 +1,24 @@
 "use client";
-import Link from "next/link";
 import { useState } from "react";
 import { Icon } from "../Icon/icon";
+import ModalEditCharacter from "./modalCreate/modalEditCharacter";
 
-export default function EditableCharacterCard({ character }) {
-  const [xp, setXp] = useState(character.xp);
-  const [euros, setEuros] = useState(character.euros);
+export default function EditableCharacterCard({ character: initialCharacter }) {
+  // Estado para armazenar os dados do personagem
+  const [character, setCharacter] = useState(initialCharacter);
+  const [xp, setXp] = useState(initialCharacter.xp);
+  const [euros, setEuros] = useState(initialCharacter.euros);
   const [isEditingXp, setIsEditingXp] = useState(false);
   const [isEditingEuros, setIsEditingEuros] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    if (parts.length === 2)
+      return decodeURIComponent(parts.pop().split(";").shift());
     return null;
   }
-
 
   const handleSaveXp = async () => {
     try {
@@ -37,6 +40,8 @@ export default function EditableCharacterCard({ character }) {
         throw new Error("Erro ao atualizar XP");
       }
 
+      // Atualiza o personagem localmente
+      setCharacter((prev) => ({ ...prev, xp }));
       setIsEditingXp(false);
     } catch (error) {
       console.error("Erro ao salvar XP:", error);
@@ -68,6 +73,8 @@ export default function EditableCharacterCard({ character }) {
         throw new Error("Erro ao atualizar Euros");
       }
 
+      // Atualiza o personagem localmente
+      setCharacter((prev) => ({ ...prev, euros }));
       setIsEditingEuros(false);
     } catch (error) {
       console.error("Erro ao salvar Euros:", error);
@@ -77,6 +84,14 @@ export default function EditableCharacterCard({ character }) {
   const handleCancelEuros = () => {
     setEuros(character.euros);
     setIsEditingEuros(false);
+  };
+
+  // Função para atualizar o personagem quando o modal é salvo
+  const handleCharacterUpdated = (updatedCharacter) => {
+    setCharacter(updatedCharacter);
+    // Atualiza também os valores de XP e Euros para manter a consistência
+    setXp(updatedCharacter.xp);
+    setEuros(updatedCharacter.euros);
   };
 
   return (
@@ -118,13 +133,23 @@ export default function EditableCharacterCard({ character }) {
               onClick={handleSaveXp}
               className="transition-colors transform hover:scale-110 active:scale-95"
             >
-              <Icon id="check" height={13} width={18} className="animate-pulse" />
+              <Icon
+                id="check"
+                height={13}
+                width={18}
+                className="animate-pulse"
+              />
             </button>
             <button
               onClick={handleCancelXp}
               className="ml-2 transform hover:scale-110 active:scale-70"
             >
-              <Icon id="close" height={14} width={14} className="animate-pulse scale-95" />
+              <Icon
+                id="close"
+                height={14}
+                width={14}
+                className="animate-pulse scale-95"
+              />
             </button>
           </div>
         ) : (
@@ -164,13 +189,23 @@ export default function EditableCharacterCard({ character }) {
               onClick={handleSaveEuros}
               className="transition-colors transform hover:scale-110 active:scale-95"
             >
-              <Icon id="check" height={13} width={18} className="animate-pulse" />
+              <Icon
+                id="check"
+                height={13}
+                width={18}
+                className="animate-pulse"
+              />
             </button>
             <button
               onClick={handleCancelEuros}
               className="ml-2 transform hover:scale-110 active:scale-70"
             >
-              <Icon id="close" height={14} width={14} className="animate-pulse scale-95" />
+              <Icon
+                id="close"
+                height={14}
+                width={14}
+                className="animate-pulse scale-95"
+              />
             </button>
           </div>
         ) : (
@@ -190,13 +225,20 @@ export default function EditableCharacterCard({ character }) {
 
       {/* Botão de edição do personagem */}
       <div className="flex justify-end">
-        <Link
-          href={`/profile/character/edit?id=${character.character_id}`}
+        <button
+          onClick={() => setIsEditModalOpen(true)}
           className="text-gray-400 hover:text-gray-300 transition-colors transform hover:scale-110 active:scale-95"
         >
           <Icon id="character-edit" height={17} width={19} />
-        </Link>
+        </button>
       </div>
+
+      <ModalEditCharacter
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        character={character}
+        onCharacterUpdated={handleCharacterUpdated}
+      />
     </div>
   );
 }

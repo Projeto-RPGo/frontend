@@ -91,7 +91,7 @@ export default function DomSkill({ dom, userId }) {
         onClick={toggleDom}
         className="cursor-pointer font-bold text-lg text-red-500 hover:text-red-600 transition-colors flex items-center"
       >
-        {dom ? dom.nome : "Carregando..."}
+        {dom ? dom.name : "Carregando..."}
         <Icon
           id={"expand"}
           height={15}

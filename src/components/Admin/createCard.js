@@ -1,11 +1,8 @@
 import { Icon } from "@/components/Icon/icon";
-import { useRouter } from "next/navigation";
 
-export default function CreateCard({ route, message }) {
-  const router = useRouter();
-
+export default function CreateCard({ onClick, message }) {
   const handleClick = () => {
-    router.push(route);
+    onClick();
   };
 
   return (
@@ -15,7 +12,6 @@ export default function CreateCard({ route, message }) {
     >
       <Icon id="add" size={24} className="scale-[3.0]" />
       <h3 className="text-xl font-bold text-center">{message}</h3>
-
     </button>
   );
 }

@@ -14,7 +14,10 @@ export default function CharacterCard({ character }) {
           <strong>Afiliação:</strong> {character.affiliation}
         </p>
         <p>
-          <strong>Nível:</strong> {character.xp}
+          <strong>Nível(XP):</strong> {character.xp}
+        </p>
+        <p>
+          <strong>Euros:</strong> {character.euros}
         </p>
       </div>
     </Link>

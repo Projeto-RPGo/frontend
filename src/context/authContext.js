@@ -20,7 +20,6 @@ export function AuthProvider({ children }) {
         if (response.ok) {
           const data = await response.json();
           setUser(data);
-          console.log("Usuário logado:", data);
         } else {
           setUser(null);
           console.warn("Usuário não autenticado");
