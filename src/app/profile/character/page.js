@@ -21,21 +21,23 @@ export default function CharacterPage() {
       if (!id) return;
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/characters/${id}/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/characters/${id}/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           setCharacter(data);
         } else {
           console.error("Erro ao buscar personagem:", response.statusText);
         }
-      }
-      catch {
+      } catch {
         console.error("Erro na requisição:", error);
       }
     }
@@ -48,12 +50,56 @@ export default function CharacterPage() {
       if (!id) return;
 
       try {
-        const domsPlayer = await fetch(`/api/doms?userId=${id}`);
-        if (domsPlayer.ok) {
-          const data = await domsPlayer.json();
-          setDomsPlayer(data);
+        const response1 = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/domain/${character.domain1}/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+
+        const response2 = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/domain/${character.domain2}/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+
+        if (response1.ok && response2.ok) {
+          const data1 = await response1.json();
+          const data2 = await response2.json();
+          const formattedData = [
+            {
+              id: data1.domain_id,
+              name: data1.name,
+              descricao: data1.description,
+            },
+            {
+              id: data2.domain_id,
+              name: data2.name,
+              descricao: data2.description,
+            },
+          ];
+          setDomsPlayer(formattedData);
+        } else if (response1.ok) {
+          const data = await response1.json();
+          const formattedData = [
+            {
+              id: data.domain_id,
+              name: data.name,
+              descricao: data.description,
+            },
+          ];
+          setDomsPlayer(formattedData);
         } else {
-          console.error("Erro ao buscar domínios do jogador");
+          console.error("Erro ao buscar dominio:", response1.statusText);
         }
       } catch (error) {
         console.error("Erro na requisição:", error);
@@ -61,7 +107,7 @@ export default function CharacterPage() {
     }
 
     fetchDomsPlayer();
-  }, [id]);
+  }, [character]);
 
   if (!id || !character) {
     return (
@@ -100,15 +146,12 @@ export default function CharacterPage() {
             <InfoText label="Patente" value={character.rank} />
             <InfoText
               label="Domínio(s)"
-              value={domsPlayer?.map((dom) => dom.nome).join(", ") || "Nenhum"}
+              value={domsPlayer?.map((dom) => dom.name).join(", ") || "Nenhum"}
             />
             <InfoText label="Raça" value={character.race} />
             <InfoText label="Idade" value={character.age} />
             <InfoText label="Personalidade" value={character.personality} />
-            <InfoText
-              label="História de Fundo"
-              value={character.background}
-            />
+            <InfoText label="História de Fundo" value={character.background} />
             <InfoText label="Status" value={character.status} />
           </div>
         </div>
