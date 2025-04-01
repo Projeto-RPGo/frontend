@@ -1,16 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import DomAffiliation from "@/components/Affiliation/domAffiliation";
-import ModalNewDomain from "@/components/Admin/modalCreate/modalNewDomain";
-import ModalNewAffiliation from "@/components/Admin/modalCreate/modalNewAffiliation";
-import CreateCard from "@/components/Admin/createCard";
 
 export default function AffiliationPage() {
   const [allAffiliations, setAllAffiliations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isModalOpenDomain, setIsModalOpenDomain] = useState(false);
-  const [isModalOpenAffiliation, setIsModalOpenAffiliation] = useState(false);
 
   useEffect(() => {
     async function fetchAllAffiliations() {
@@ -33,13 +28,7 @@ export default function AffiliationPage() {
         if (!response.ok) throw new Error("Erro ao buscar afiliações");
 
         const data = await response.json();
-        const formattedData = data.map((affiliation) => ({
-          id: affiliation.affiliation_id,
-          name: affiliation.name,
-          description: affiliation.description,
-        }));
-
-        setAllAffiliations(formattedData);
+        setAllAffiliations(data);
       } catch (error) {
         console.error("Erro detalhado:", error);
         setError("Falha ao carregar afiliações: " + error.message);
@@ -51,10 +40,6 @@ export default function AffiliationPage() {
     fetchAllAffiliations();
   }, []);
 
-  const handleAffiliationCreated = (newAffiliation) => {
-    setAllAffiliations((prevAffiliations) => [...prevAffiliations, newAffiliation]);
-  };
-
   if (loading) {
     return <p className="text-gray-200">Carregando afiliações...</p>;
   }
@@ -65,10 +50,24 @@ export default function AffiliationPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 text-white">
+    <h1 className="text-3xl font-bold mb-4">Afiliações</h1>
+    <h2 className="text-lg text-gray-400 mb-6">
+        Todas as afiliações existentes.
+      </h2> 
+    <div className="flex justify-center mb-6">
+        <div className="w-10/12 h-1 bg-blue-500 rounded-full"></div>
+      </div>    
       <div className="flex flex-col space-y-4">
-        {allAffiliations.map((affiliation) => (
-          <DomAffiliation key={affiliation.id} affiliation={affiliation} />
-        ))}
+        {allAffiliations.length > 0 ? (
+          allAffiliations.map((affiliation) => (
+            <DomAffiliation 
+              key={affiliation.affiliation_id || affiliation.id} 
+              affiliation={affiliation} 
+            />
+          ))
+        ) : (
+          <p className="text-gray-400">Nenhuma afiliação encontrada</p>
+        )}
       </div>
     </div>
   );

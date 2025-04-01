@@ -14,7 +14,7 @@ export default function ModalNewAffiliation({
     leader: null,
     subleader: null
   });
-  const [characters, setCharacters] = useState([]); // Agora armazena personagens
+  const [npcs, setNpcs] = useState([]);
   const [status, setStatus] = useState("default");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -22,15 +22,14 @@ export default function ModalNewAffiliation({
 
   useEffect(() => {
     if (isOpen) {
-      fetchCharacters(); // Busca personagens em vez de usuários
+      fetchNPCs();
     }
   }, [isOpen]);
 
-  // Busca a lista de personagens
-  const fetchCharacters = async () => {
+  const fetchNPCs = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/characters/`, // Endpoint para personagens
+        `${process.env.NEXT_PUBLIC_API_URL}/api/npc/`,
         {
           method: "GET",
           headers: {
@@ -41,13 +40,13 @@ export default function ModalNewAffiliation({
       );
 
       if (!response.ok) {
-        throw new Error("Erro ao carregar personagens");
+        throw new Error("Erro ao carregar NPCs");
       }
 
       const data = await response.json();
-      setCharacters(data);
+      setNpcs(data.filter(npc => npc.npc_id !== undefined));
     } catch (error) {
-      console.error("Erro ao carregar personagens:", error);
+      console.error("Erro ao carregar NPCs:", error);
       setErrorMessage(error.message);
       setStatus("error");
     }
@@ -65,9 +64,8 @@ export default function ModalNewAffiliation({
     setStatus("loading");
 
     try {
-      // Verifica se líder e sublíder são diferentes (se ambos estiverem definidos)
       if (formData.leader && formData.subleader && formData.leader === formData.subleader) {
-        throw new Error("Líder e sublíder não podem ser o mesmo personagem");
+        throw new Error("Líder e sublíder não podem ser o mesmo NPC");
       }
 
       const response = await fetch(
@@ -82,8 +80,8 @@ export default function ModalNewAffiliation({
           body: JSON.stringify({
             name: formData.name.trim(),
             description: formData.description.trim(),
-            leader: formData.leader, // ID do personagem líder
-            subleader: formData.subleader // ID do personagem sublíder
+            leader: formData.leader,
+            subleader: formData.subleader
           }),
         }
       );
@@ -98,12 +96,10 @@ export default function ModalNewAffiliation({
         );
       }
 
-      // Sucesso - chama a função de callback
       if (typeof onAffiliationCreated === 'function') {
         onAffiliationCreated(data);
       }
 
-      // Reseta o formulário
       setFormData({
         name: "",
         description: "",
@@ -147,7 +143,6 @@ export default function ModalNewAffiliation({
         <h2 className="text-xl font-bold mb-6 text-white">Criar Nova Afiliação</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Campo Nome */}
           <div className="space-y-2">
             <label htmlFor="name" className="block text-sm font-medium text-gray-300">
               Nome da Afiliação*
@@ -164,7 +159,6 @@ export default function ModalNewAffiliation({
             />
           </div>
 
-          {/* Campo Descrição */}
           <div className="space-y-2">
             <label htmlFor="description" className="block text-sm font-medium text-gray-300">
               Descrição
@@ -179,10 +173,9 @@ export default function ModalNewAffiliation({
             />
           </div>
 
-          {/* Campo Líder */}
           <div className="space-y-2">
             <label htmlFor="leader" className="block text-sm font-medium text-gray-300">
-              Líder (Personagem)
+              Líder (NPC)
             </label>
             <select
               id="leader"
@@ -192,18 +185,17 @@ export default function ModalNewAffiliation({
               className="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none border border-gray-600 focus:border-red-500"
             >
               <option value="">Nenhum líder</option>
-              {characters.map((character) => (
-                <option key={character.id} value={character.id}>
-                  {character.name} (ID: {character.id})
+              {npcs.map((npc) => (
+                <option key={`leader-${npc.npc_id}`} value={npc.npc_id}>
+                  {npc.name} (ID: {npc.npc_id})
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Campo Sublíder */}
           <div className="space-y-2">
             <label htmlFor="subleader" className="block text-sm font-medium text-gray-300">
-              Sublíder (Personagem)
+              Sublíder (NPC)
             </label>
             <select
               id="subleader"
@@ -213,15 +205,14 @@ export default function ModalNewAffiliation({
               className="w-full bg-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none border border-gray-600 focus:border-red-500"
             >
               <option value="">Nenhum sublíder</option>
-              {characters.map((character) => (
-                <option key={character.id} value={character.id}>
-                  {character.name} (ID: {character.id})
+              {npcs.map((npc) => (
+                <option key={`subleader-${npc.npc_id}`} value={npc.npc_id}>
+                  {npc.name} (ID: {npc.npc_id})
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Mensagens de status */}
           {status === "error" && (
             <div className="p-3 bg-red-900/50 rounded-lg text-red-300 text-sm">
               {errorMessage}
@@ -234,7 +225,6 @@ export default function ModalNewAffiliation({
             </div>
           )}
 
-          {/* Botões */}
           <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"
