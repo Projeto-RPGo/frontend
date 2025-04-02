@@ -6,13 +6,13 @@ import getCookie from "@/utils/utils";
 export default function ModalNewAffiliation({
   isOpen,
   onClose,
-  onAffiliationCreated = () => {}
+  onAffiliationCreated = () => {},
 }) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     leader: null,
-    subleader: null
+    subleader: null,
   });
   const [npcs, setNpcs] = useState([]);
   const [status, setStatus] = useState("default");
@@ -44,7 +44,7 @@ export default function ModalNewAffiliation({
       }
 
       const data = await response.json();
-      setNpcs(data.filter(npc => npc.npc_id !== undefined));
+      setNpcs(data.filter((npc) => npc.npc_id !== undefined));
     } catch (error) {
       console.error("Erro ao carregar NPCs:", error);
       setErrorMessage(error.message);
@@ -64,7 +64,11 @@ export default function ModalNewAffiliation({
     setStatus("loading");
 
     try {
-      if (formData.leader && formData.subleader && formData.leader === formData.subleader) {
+      if (
+        formData.leader &&
+        formData.subleader &&
+        formData.leader === formData.subleader
+      ) {
         throw new Error("Líder e sublíder não podem ser o mesmo NPC");
       }
 
@@ -81,7 +85,7 @@ export default function ModalNewAffiliation({
             name: formData.name.trim(),
             description: formData.description.trim(),
             leader: formData.leader,
-            subleader: formData.subleader
+            subleader: formData.subleader,
           }),
         }
       );
@@ -90,13 +94,13 @@ export default function ModalNewAffiliation({
 
       if (!response.ok) {
         throw new Error(
-          data.detail || 
-          data.message || 
-          "Erro ao criar afiliação. Verifique os dados e tente novamente."
+          data.detail ||
+            data.message ||
+            "Erro ao criar afiliação. Verifique os dados e tente novamente."
         );
       }
 
-      if (typeof onAffiliationCreated === 'function') {
+      if (typeof onAffiliationCreated === "function") {
         onAffiliationCreated(data);
       }
 
@@ -104,9 +108,9 @@ export default function ModalNewAffiliation({
         name: "",
         description: "",
         leader: null,
-        subleader: null
+        subleader: null,
       });
-      
+
       setStatus("success");
       setTimeout(() => onClose(), 1500);
     } catch (error) {
@@ -118,20 +122,26 @@ export default function ModalNewAffiliation({
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: (name === 'leader' || name === 'subleader') 
-        ? (value === "" ? null : Number(value))
-        : value
+      [name]:
+        name === "leader" || name === "subleader"
+          ? value === ""
+            ? null
+            : Number(value)
+          : value,
     }));
-    
+
     if (status === "error") setStatus("default");
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 w-full"
+      style={{ margin: 0 }}
+    >
       <div className="relative bg-gray-800 rounded-lg p-6 w-full max-w-md border border-gray-700 shadow-lg">
         <button
           onClick={onClose}
@@ -140,11 +150,16 @@ export default function ModalNewAffiliation({
           <Icon id="close" size={20} />
         </button>
 
-        <h2 className="text-xl font-bold mb-6 text-white">Criar Nova Afiliação</h2>
+        <h2 className="text-xl font-bold mb-6 text-white">
+          Criar Nova Afiliação
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-300"
+            >
               Nome da Afiliação*
             </label>
             <input
@@ -160,7 +175,10 @@ export default function ModalNewAffiliation({
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-300"
+            >
               Descrição
             </label>
             <textarea
@@ -174,7 +192,10 @@ export default function ModalNewAffiliation({
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="leader" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="leader"
+              className="block text-sm font-medium text-gray-300"
+            >
               Líder (NPC)
             </label>
             <select
@@ -187,14 +208,17 @@ export default function ModalNewAffiliation({
               <option value="">Nenhum líder</option>
               {npcs.map((npc) => (
                 <option key={`leader-${npc.npc_id}`} value={npc.npc_id}>
-                  {npc.name} (ID: {npc.npc_id})
+                  {npc.name}
                 </option>
               ))}
             </select>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="subleader" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="subleader"
+              className="block text-sm font-medium text-gray-300"
+            >
               Sublíder (NPC)
             </label>
             <select
@@ -207,7 +231,7 @@ export default function ModalNewAffiliation({
               <option value="">Nenhum sublíder</option>
               {npcs.map((npc) => (
                 <option key={`subleader-${npc.npc_id}`} value={npc.npc_id}>
-                  {npc.name} (ID: {npc.npc_id})
+                  {npc.name}
                 </option>
               ))}
             </select>
