@@ -18,6 +18,12 @@ export default function HeaderAdmin() {
             Habilidades
           </Link>
           <Link
+            href="/admin/affiliation"
+            className="text-black font-medium text-lg hover:underline"
+          >
+            Afiliação
+          </Link>
+          <Link
             href="/admin"
             className="text-black font-medium text-lg hover:underline"
           >

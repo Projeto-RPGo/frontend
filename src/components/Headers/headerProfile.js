@@ -12,6 +12,12 @@ export default function HeaderProfile() {
             Habilidades
           </Link>
           <Link
+            href="/profile/affiliation"
+            className="text-black font-medium text-lg hover:underline"
+          >
+            Afiliação
+          </Link>
+          <Link
             href="/profile"
             className="text-black font-medium text-lg hover:underline"
           >

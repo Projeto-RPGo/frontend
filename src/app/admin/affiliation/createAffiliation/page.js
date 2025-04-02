@@ -1,6 +1,6 @@
 import LogoWithTitle from "@/components/Images/logoWithTitle";
 
-export default function CreateDomainPage() {
+export default function CreateAffiliationPage() {
   return (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-144px)] p-6">
       <div className="w-full max-w-sm">
