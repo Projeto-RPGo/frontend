@@ -6,6 +6,7 @@ import DomSkill from "@/components/Skill/domSkill";
 export default function CharacterPage() {
   const [character, setCharacter] = useState(null);
   const [domsPlayer, setDomsPlayer] = useState([]);
+  const [affiliation, setAffiliation] = useState(null);
   const [id, setId] = useState(null);
 
   useEffect(() => {
@@ -37,13 +38,42 @@ export default function CharacterPage() {
         } else {
           console.error("Erro ao buscar personagem:", response.statusText);
         }
-      } catch {
+      } catch (error) {
         console.error("Erro na requisição:", error);
       }
     }
 
     fetchCharacter();
   }, [id]);
+
+  useEffect(() => {
+    async function fetchAffiliation() {
+      if (!character?.affiliation) return;
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/affiliation/${character.affiliation}/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setAffiliation(data);
+        } else {
+          console.error("Erro ao buscar afiliação:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    }
+
+    fetchAffiliation();
+  }, [character]);
 
   useEffect(() => {
     async function fetchDomsPlayer() {
@@ -142,7 +172,7 @@ export default function CharacterPage() {
               labelColor="text-red-500"
               valueColor="text-gray-200"
             />
-            <InfoText label="Afiliação" value={character.affiliation} />
+            <InfoText label="Afiliação" value={affiliation?.name} />
             <InfoText label="Patente" value={character.rank} />
             <InfoText
               label="Domínio(s)"

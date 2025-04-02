@@ -6,6 +6,12 @@ export default function HeaderProfile() {
       <div className="flex items-center justify-center bg-white hover:bg-gray-100 px-8 py-2 rounded-full shadow-md w-2/3 max-w-4xl">
         <div className="flex justify-around w-full">
           <Link
+            href="/profile/characters"
+            className="text-black font-medium text-lg hover:underline"
+          >
+            Personagens
+          </Link>
+          <Link
             href="/profile/skills"
             className="text-black font-medium text-lg hover:underline"
           >
@@ -15,7 +21,13 @@ export default function HeaderProfile() {
             href="/profile/affiliation"
             className="text-black font-medium text-lg hover:underline"
           >
-            Afiliação
+            Afiliações
+          </Link>
+          <Link
+            href="/profile/race"
+            className="text-black font-medium text-lg hover:underline"
+          >
+            Raças
           </Link>
           <Link
             href="/profile"

@@ -21,7 +21,13 @@ export default function HeaderAdmin() {
             href="/admin/affiliation"
             className="text-black font-medium text-lg hover:underline"
           >
-            Afiliação
+            Afiliações
+          </Link>
+          <Link
+            href="/admin/race"
+            className="text-black font-medium text-lg hover:underline"
+          >
+            Raças
           </Link>
           <Link
             href="/admin"
