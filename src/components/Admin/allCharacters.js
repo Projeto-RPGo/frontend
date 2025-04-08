@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Icon } from "../Icon/icon";
-import CharacterCard from "@/components/Profile/characterCard";
 import EditableCharacterCard from "./editableCharacterCard";
 
 export default function AllCharacters({ user }) {
