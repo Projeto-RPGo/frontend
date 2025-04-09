@@ -68,7 +68,9 @@ export default function AllNPCs() {
       {expanded && (
         <div className="ml-6 mt-2">
           {loading ? (
-            <p className="text-gray-200">Carregando NPCs...</p>
+            <div className="flex justify-center py-4">
+              <Icon id="spinner" size={24} className="animate-spin text-gray-400" />
+            </div>
           ) : NPCs.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {NPCs.map((npc) => (
