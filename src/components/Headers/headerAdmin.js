@@ -12,6 +12,12 @@ export default function HeaderAdmin() {
             Personagens
           </Link>
           <Link
+            href="/admin/quest"
+            className="text-black font-medium text-lg hover:underline"
+          >
+            Missões
+          </Link>
+          <Link
             href="/admin/skills"
             className="text-black font-medium text-lg hover:underline"
           >

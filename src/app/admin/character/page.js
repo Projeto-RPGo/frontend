@@ -3,15 +3,12 @@ import InfoText from "@/components/Profile/Character/infoText";
 import { useEffect, useState, useMemo } from "react";
 import DomSkill from "@/components/Skill/domSkill";
 import QuestCard from "@/components/Quest/questCard";
-import EnterQuestCard from "@/components/Quest/enterQuestCard";
 
 export default function CharacterPage() {
   const [character, setCharacter] = useState(null);
   const [domsPlayer, setDomsPlayer] = useState([]);
   const [affiliation, setAffiliation] = useState(null);
   const [quests, setQuests] = useState([]);
-  const [availableQuests, setAvailableQuests] = useState([]);
-  const [showAvailableQuests, setShowAvailableQuests] = useState(false);
   const [id, setId] = useState(null);
 
   // Captura o ID da URL
@@ -158,55 +155,6 @@ export default function CharacterPage() {
     fetchQuests();
   }, [id, character]);
 
-  const fetchAvailableQuests = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/quest/`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
-
-      if (response.ok) {
-        const allQuests = await response.json();
-
-        // Filtrar as missões disponíveis
-        const filteredQuests = allQuests.filter((quest) => {
-          // Verifica se o nível do personagem está dentro do intervalo da missão
-          const levelMatch =
-            character.xp >= quest.min_level && character.xp <= quest.max_level;
-
-          // Verifica se o personagem não é o doador da missão
-          const notGiver = quest.giver !== character.user_id;
-
-          // Verifica se o personagem já não está participando desta missão
-          const notParticipating = !quests.some(
-            (q) => q.quest_id === quest.quest_id
-          );
-
-          const isActive =
-            quest.status === "ACTIVE" || quest.status === "Active";
-
-          return levelMatch && notGiver && notParticipating && isActive;
-        });
-
-        setAvailableQuests(filteredQuests);
-        setShowAvailableQuests(true);
-      } else {
-        console.error(
-          "Erro ao buscar missões disponíveis:",
-          response.statusText
-        );
-      }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-    }
-  };
-
   const activeQuests = useMemo(() => {
     return quests.filter(
       (quest) => quest.status === "ACTIVE" || quest.status === "Active"
@@ -224,17 +172,6 @@ export default function CharacterPage() {
       (quest) => quest.status === "CANCELED" || quest.status === "Canceled"
     );
   }, [quests]);
-
-  const handleEnterQuest = (questId) => {
-    // Remove da lista de disponíveis
-    setAvailableQuests((prev) => prev.filter((q) => q.quest_id !== questId));
-
-    // Adiciona à lista geral de quests (que irá atualizar activeQuests automaticamente via useMemo)
-    const enteredQuest = availableQuests.find((q) => q.quest_id === questId);
-    if (enteredQuest) {
-      setQuests((prev) => [...prev, { ...enteredQuest, status: "ACTIVE" }]);
-    }
-  };
 
   if (!id || !character) {
     return (
@@ -340,39 +277,6 @@ export default function CharacterPage() {
       )}
       {quests.length === 0 && (
         <p className="text-gray-200">Nenhuma missão encontrada.</p>
-      )}
-      <div className="mt-8 flex justify-center">
-        <button
-          onClick={fetchAvailableQuests}
-          className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition-colors"
-        >
-          Buscar Novas Missões
-        </button>
-      </div>
-
-      {/* Seção de missões disponíveis */}
-      {showAvailableQuests && (
-        <div className="mt-8">
-          <h1 className="text-xl font-bold mb-4 text-yellow-200">
-            Missões Disponíveis
-          </h1>
-          {availableQuests.length > 0 ? (
-            <div className="flex gap-4 flex-wrap">
-              {availableQuests.map((quest) => (
-                <EnterQuestCard
-                  key={quest.quest_id}
-                  quest={quest}
-                  characterId={id}
-                  onEnterQuest={handleEnterQuest}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-400">
-              Nenhuma missão disponível no momento.
-            </p>
-          )}
-        </div>
       )}
     </div>
   );

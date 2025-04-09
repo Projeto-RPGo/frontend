@@ -2,15 +2,16 @@
 import { useState } from "react";
 import { Icon } from "../Icon/icon";
 import ModalEditCharacter from "./modalCreate/modalEditCharacter";
+import { useRouter } from "next/navigation";
 
 export default function EditableCharacterCard({ character: initialCharacter }) {
-  // Estado para armazenar os dados do personagem
   const [character, setCharacter] = useState(initialCharacter);
   const [xp, setXp] = useState(initialCharacter.xp);
   const [euros, setEuros] = useState(initialCharacter.euros);
   const [isEditingXp, setIsEditingXp] = useState(false);
   const [isEditingEuros, setIsEditingEuros] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const router = useRouter();
 
   function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -20,7 +21,8 @@ export default function EditableCharacterCard({ character: initialCharacter }) {
     return null;
   }
 
-  const handleSaveXp = async () => {
+  const handleSaveXp = async (e) => {
+    e.stopPropagation();
     try {
       const csrftoken = getCookie("csrftoken");
       const response = await fetch(
@@ -36,11 +38,8 @@ export default function EditableCharacterCard({ character: initialCharacter }) {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Erro ao atualizar XP");
-      }
+      if (!response.ok) throw new Error("Erro ao atualizar XP");
 
-      // Atualiza o personagem localmente
       setCharacter((prev) => ({ ...prev, xp }));
       setIsEditingXp(false);
     } catch (error) {
@@ -48,12 +47,14 @@ export default function EditableCharacterCard({ character: initialCharacter }) {
     }
   };
 
-  const handleCancelXp = () => {
+  const handleCancelXp = (e) => {
+    e.stopPropagation();
     setXp(character.xp);
     setIsEditingXp(false);
   };
 
-  const handleSaveEuros = async () => {
+  const handleSaveEuros = async (e) => {
+    e.stopPropagation();
     try {
       const csrftoken = getCookie("csrftoken");
       const response = await fetch(
@@ -69,11 +70,8 @@ export default function EditableCharacterCard({ character: initialCharacter }) {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Erro ao atualizar Euros");
-      }
+      if (!response.ok) throw new Error("Erro ao atualizar Euros");
 
-      // Atualiza o personagem localmente
       setCharacter((prev) => ({ ...prev, euros }));
       setIsEditingEuros(false);
     } catch (error) {
@@ -81,156 +79,191 @@ export default function EditableCharacterCard({ character: initialCharacter }) {
     }
   };
 
-  const handleCancelEuros = () => {
+  const handleCancelEuros = (e) => {
+    e.stopPropagation();
     setEuros(character.euros);
     setIsEditingEuros(false);
   };
 
-  // Função para atualizar o personagem quando o modal é salvo
   const handleCharacterUpdated = (updatedCharacter) => {
     setCharacter(updatedCharacter);
-    // Atualiza também os valores de XP e Euros para manter a consistência
     setXp(updatedCharacter.xp);
     setEuros(updatedCharacter.euros);
   };
 
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditXpClick = (e) => {
+    e.stopPropagation();
+    setIsEditingXp(true);
+  };
+
+  const handleEditEurosClick = (e) => {
+    e.stopPropagation();
+    setIsEditingEuros(true);
+  };
+
+  const handleCardClick = (e) => {
+    const interactiveElements = ["button", "input", "[data-no-redirect]"].join(
+      ","
+    );
+
+    if (e.target.closest(interactiveElements)) {
+      return;
+    }
+    router.push(`/admin/character?id=${character.character_id}`);
+  };
+
   return (
-    <div className="bg-gray-800 p-4 rounded-lg shadow-md text-white border border-gray-700">
-      {/* Imagem do Personagem */}
-      <img
-        src={character.avatar}
-        alt={character.name}
-        className="w-full h-40 object-cover rounded-md mb-3"
-      />
+    <div
+      onClick={handleCardClick}
+      className="group relative bg-gray-800 p-4 rounded-lg shadow-md text-white border border-gray-700 cursor-pointer"
+    >
+      {/* Imagem do Personagem com hover */}
+      <div className="overflow-hidden rounded-md mb-3">
+        <img
+          src={character.avatar}
+          alt={character.name}
+          className="w-full h-40 object-cover hover:scale-105 transition-transform duration-300"
+        />
+      </div>
 
-      {/* Nome do Personagem */}
-      <h3 className="text-xl font-bold">{character.name}</h3>
+      {/* Conteúdo não clicável */}
+      <div data-no-redirect className="space-y-2">
+        {/* Nome do Personagem */}
+        <h3 className="text-xl font-bold">{character.name}</h3>
 
-      {/* Afiliação */}
-      <p>
-        <strong>Afiliação:</strong> {character.affiliation}
-      </p>
-
-      {/* XP (Editável) */}
-      <div className="flex items-center mt-2">
+        {/* Afiliação */}
         <p>
-          <strong>Nível(XP):</strong>
+          <strong>Afiliação:</strong> {character.affiliation}
+        </p>
+
+        {/* XP (Editável) */}
+        <div className="flex items-center mt-2">
+          <p>
+            <strong>Nível(XP):</strong>
+            {isEditingXp ? (
+              <input
+                type="number"
+                value={xp}
+                onChange={(e) => setXp(Number(e.target.value))}
+                onClick={(e) => e.stopPropagation()}
+                className="ml-2 p-1 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 w-[9ch]"
+                autoFocus
+              />
+            ) : (
+              ` ${xp}`
+            )}
+          </p>
           {isEditingXp ? (
-            <input
-              type="number"
-              value={xp}
-              onChange={(e) => setXp(Number(e.target.value))}
-              className="ml-2 p-1 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 w-[9ch]"
-              autoFocus
-            />
+            <div className="flex items-center ml-2">
+              <button
+                onClick={handleSaveXp}
+                className="text-green-400 hover:text-green-300 transition-colors transform hover:scale-110 active:scale-95"
+              >
+                <Icon
+                  id="check"
+                  height={13}
+                  width={18}
+                  className="animate-pulse"
+                />
+              </button>
+              <button
+                onClick={handleCancelXp}
+                className="ml-2 text-red-400 hover:text-red-300 transform hover:scale-110 active:scale-70"
+              >
+                <Icon
+                  id="close"
+                  height={14}
+                  width={14}
+                  className="animate-pulse scale-95"
+                />
+              </button>
+            </div>
           ) : (
-            ` ${xp}`
-          )}
-        </p>
-        {isEditingXp ? (
-          <div className="flex items-center ml-2">
             <button
-              onClick={handleSaveXp}
-              className="transition-colors transform hover:scale-110 active:scale-95"
+              onClick={handleEditXpClick}
+              className="ml-2 text-gray-400 hover:text-gray-300 transition-colors transform hover:scale-110 active:scale-95"
             >
               <Icon
-                id="check"
-                height={13}
+                id="edit"
+                height={18}
                 width={18}
-                className="animate-pulse"
+                className="hover:rotate-6 transition-transform duration-300 ease-in-out"
               />
             </button>
-            <button
-              onClick={handleCancelXp}
-              className="ml-2 transform hover:scale-110 active:scale-70"
-            >
-              <Icon
-                id="close"
-                height={14}
-                width={14}
-                className="animate-pulse scale-95"
-              />
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsEditingXp(true)}
-            className="ml-2 text-gray-400 hover:text-gray-300 transition-colors transform hover:scale-110 active:scale-95"
-          >
-            <Icon
-              id="edit"
-              height={18}
-              width={18}
-              className="hover:rotate-6 transition-transform duration-300 ease-in-out"
-            />
-          </button>
-        )}
-      </div>
+          )}
+        </div>
 
-      {/* Euros (Editável) */}
-      <div className="flex items-center mt-2">
-        <p>
-          <strong>Euros:</strong>
+        {/* Euros (Editável) */}
+        <div className="flex items-center mt-2">
+          <p>
+            <strong>Euros:</strong>
+            {isEditingEuros ? (
+              <input
+                type="number"
+                value={euros}
+                onChange={(e) => setEuros(Number(e.target.value))}
+                onClick={(e) => e.stopPropagation()}
+                className="ml-2 p-1 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 w-[9ch]"
+                autoFocus
+              />
+            ) : (
+              ` ${euros}`
+            )}
+          </p>
           {isEditingEuros ? (
-            <input
-              type="number"
-              value={euros}
-              onChange={(e) => setEuros(Number(e.target.value))}
-              className="ml-2 p-1 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 w-[9ch]"
-              autoFocus
-            />
+            <div className="flex items-center ml-2">
+              <button
+                onClick={handleSaveEuros}
+                className="text-green-400 hover:text-green-300 transition-colors transform hover:scale-110 active:scale-95"
+              >
+                <Icon
+                  id="check"
+                  height={13}
+                  width={18}
+                  className="animate-pulse"
+                />
+              </button>
+              <button
+                onClick={handleCancelEuros}
+                className="ml-2 text-red-400 hover:text-red-300 transform hover:scale-110 active:scale-70"
+              >
+                <Icon
+                  id="close"
+                  height={14}
+                  width={14}
+                  className="animate-pulse scale-95"
+                />
+              </button>
+            </div>
           ) : (
-            ` ${euros}`
-          )}
-        </p>
-        {isEditingEuros ? (
-          <div className="flex items-center ml-2">
             <button
-              onClick={handleSaveEuros}
-              className="transition-colors transform hover:scale-110 active:scale-95"
+              onClick={handleEditEurosClick}
+              className="ml-2 text-gray-400 hover:text-gray-300 transition-colors transform hover:scale-110 active:scale-95"
             >
               <Icon
-                id="check"
-                height={13}
+                id="edit"
+                height={18}
                 width={18}
-                className="animate-pulse"
+                className="hover:rotate-6 transition-transform duration-300 ease-in-out"
               />
             </button>
-            <button
-              onClick={handleCancelEuros}
-              className="ml-2 transform hover:scale-110 active:scale-70"
-            >
-              <Icon
-                id="close"
-                height={14}
-                width={14}
-                className="animate-pulse scale-95"
-              />
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsEditingEuros(true)}
-            className="ml-2 text-gray-400 hover:text-gray-300 transition-colors transform hover:scale-110 active:scale-95"
-          >
-            <Icon
-              id="edit"
-              height={18}
-              width={18}
-              className="hover:rotate-6 transition-transform duration-300 ease-in-out"
-            />
-          </button>
-        )}
-      </div>
+          )}
+        </div>
 
-      {/* Botão de edição do personagem */}
-      <div className="flex justify-end">
-        <button
-          onClick={() => setIsEditModalOpen(true)}
-          className="text-gray-400 hover:text-gray-300 transition-colors transform hover:scale-110 active:scale-95"
-        >
-          <Icon id="character-edit" height={17} width={19} />
-        </button>
+        {/* Botão de edição do personagem */}
+        <div className="flex justify-end">
+          <button
+            onClick={handleEditClick}
+            className="text-gray-400 hover:text-gray-300 transition-colors transform hover:scale-110 active:scale-95"
+          >
+            <Icon id="character-edit" height={17} width={19} />
+          </button>
+        </div>
       </div>
 
       <ModalEditCharacter
