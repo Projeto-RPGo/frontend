@@ -1,8 +1,8 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "../Icon/icon";
 import ModalEditCharacter from "./modalCreate/modalEditCharacter";
-import { useRouter } from "next/navigation";
 
 export default function EditableCharacterCard({ character: initialCharacter }) {
   const [character, setCharacter] = useState(initialCharacter);
@@ -14,6 +14,7 @@ export default function EditableCharacterCard({ character: initialCharacter }) {
   const router = useRouter();
 
   function getCookie(name) {
+    if (typeof document === "undefined") return null;
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2)

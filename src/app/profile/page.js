@@ -1,12 +1,12 @@
 "use client";
+import CreateCard from "@/components/Admin/createCard";
+import ModalNewQuest from "@/components/Admin/modalCreate/modalNewQuest";
+import LogoutButton from "@/components/Logout/logoutButton";
 import CharacterCard from "@/components/Profile/characterCard";
 import CreateCharacter from "@/components/Profile/createCharacter";
-import CreateCard from "@/components/Admin/createCard";
-import { useAuth } from "@/context/authContext";
-import { useEffect, useState, useMemo } from "react";
-import LogoutButton from "@/components/Logout/logoutButton";
 import GiverQuestCard from "@/components/Quest/giverQuestCard";
-import ModalNewQuest from "@/components/Admin/modalCreate/modalNewQuest";
+import { useAuth } from "@/context/authContext";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -17,6 +17,7 @@ export default function ProfilePage() {
   const [isModalOpenQuest, setIsModalOpenQuest] = useState(false);
 
   function getCookie(name) {
+    if (typeof document === "undefined") return null;
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2)

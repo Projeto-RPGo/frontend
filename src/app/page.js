@@ -1,14 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import FormButton from "@/components/Forms/formButton";
 import LogoWithTitle from "@/components/Images/logoWithTitle";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const router = useRouter();
-  const [isSuperUser, setIsSuperUser] = useState(null); 
+  const [isSuperUser, setIsSuperUser] = useState(null);
 
   function getCookie(name) {
+    if (typeof document === "undefined") return null;
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());

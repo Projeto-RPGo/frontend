@@ -1,9 +1,10 @@
 "use client";
-import { useAuth } from "@/context/authContext";
 import { Icon } from "@/components/Icon/icon";
+import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 
 function getCookie(name) {
+  if (typeof document === "undefined") return null;
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2)
